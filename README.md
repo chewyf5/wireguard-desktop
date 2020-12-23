@@ -26,7 +26,7 @@ This shell script(s) depend on:
 Clone the repo to a folder of your choice. 
 
 ``` 
-git clone https://github.com/ ... 
+git clone https://github.com/chewyf5/wireguard-desktop.git 
 ```
 
 Install it by the common Linux three-liner. 

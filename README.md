@@ -95,3 +95,5 @@ In this case the desired location for the script and its dependencies is /usr/lo
 * [Satta](https://github.com/satta), who told me a lot about the importance of using prefixes in make files.
 
 * Thanks to the author of [makefiletutorial.com](https://makefiletutorial.com/) where I learnd how to write make files. 
+
+* Jason A. Donenfeld - the creator of Wireguard - "Man, you build the VPN I have ever dreamed of"

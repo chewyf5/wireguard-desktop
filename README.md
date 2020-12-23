@@ -12,7 +12,7 @@ The script uses wg-quick to initialize the VPN connection. If sudo rights are ne
 
 The script does NOT check if the connection is usable. It only sees that the connection is initiated. This is intended behavior! 
 
-The reason for this is simple. Wireguard is actual a stateless VPN, it simply encrypts your IP packages and sends them to the receiving peer. In the case of network issues, the user should only be informed by the change of the icon that all of his packages are sent to the receiver (depends on the configuration of course).   
+The reason for this is simple. Wireguard is a stateless VPN, it simply encrypts your IP packages and sends them to the receiving peer. In the case of network issues, the user should only be informed by the change of the icon that all of his packages are sent to the receiver (depends on the configuration of course).   
 
 # Deployment
 

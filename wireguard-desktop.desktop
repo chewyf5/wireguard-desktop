@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Wireguard Home
+Exec=___EXEC_PATH___/wireguard-desktop.sh
+Comment=
+Terminal=false
+Icon=___ICON_PATH___/wireguard-desktop-red.png
+Type=Application
+
+

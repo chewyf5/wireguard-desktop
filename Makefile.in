@@ -1,0 +1,70 @@
+# PREFIX is defined by ./configure
+BUILD = build
+DEBUG = debug
+
+APP_NAME 			= wireguard-desktop
+ICON_PATH 			= /share/pixmaps
+EXEC_PATH 			= /bin
+LIB_PATH 			= /lib/$(APP_NAME)
+DESKTOP_FILE_PATH 	= /share/applications
+
+PATHS = $(ICON_PATH) $(EXEC_PATH) $(LIB_PATH) $(DESKTOP_FILE_PATH)
+
+ICONS	= wireguard-desktop-grey.png wireguard-desktop-red.png
+EXEC	= wireguard-desktop.sh
+LIB		= zenity.sh
+DESKTOP = wireguard-desktop.desktop
+
+.DEFAULT_GOAL = build
+
+.PHONY: $(ICONS) $(EXEC) $(LIB) $(DESKTOP)
+
+$(EXEC):
+	mkdir -p $(PREFIX)$(EXEC_PATH)
+	cp $@ $(PREFIX)$(EXEC_PATH)/$@
+	@echo patching $@ file
+	sed -i "s#___LIB_PATH___#$(PATCH_PATH)$(LIB_PATH)#g" $(PREFIX)$(EXEC_PATH)/$@
+	sed -i "s#___ICON_PATH___#$(PATCH_PATH)$(ICON_PATH)#g" $(PREFIX)$(EXEC_PATH)/$@
+	sed -i "s#___DESKTOP_FILE_PATH___#$(PATCH_PATH)$(DESKTOP_FILE_PATH)#g" $(PREFIX)$(EXEC_PATH)/$@
+	chmod 755 $(PREFIX)$(EXEC_PATH)/$@
+
+$(ICONS):
+	mkdir -p $(PREFIX)$(ICON_PATH)
+	cp $@ $(PREFIX)$(ICON_PATH)
+
+$(LIB):
+	mkdir -p $(PREFIX)$(LIB_PATH)
+	cp $@ $(PREFIX)$(LIB_PATH)
+	chmod 755 $(PREFIX)$(LIB_PATH)/$@
+
+$(DESKTOP):
+	mkdir -p $(PREFIX)$(DESKTOP_FILE_PATH)
+	cp $@ $(PREFIX)$(DESKTOP_FILE_PATH)
+	@echo patching $@ file
+	sed -i "s#___EXEC_PATH___#$(PATCH_PATH)$(EXEC_PATH)#g" $(PREFIX)$(DESKTOP_FILE_PATH)/$@
+	sed -i "s#___ICON_PATH___#$(PATCH_PATH)$(ICON_PATH)#g" $(PREFIX)$(DESKTOP_FILE_PATH)/$@
+
+build:
+	$(MAKE) PREFIX=$(BUILD)$(PREFIX) all
+
+debug:
+	$(MAKE) PREFIX=$(DEBUG)$(PREFIX) PATCH_PATH=$(CURDIR)/$(DEBUG)$(PREFIX) all
+
+all: $(EXEC) $(ICONS) $(LIB) $(DESKTOP)
+
+clean:
+	rm -rf build
+	rm -rf debug
+	rm Makefile
+
+install: build
+	cp -r $(BUILD)/* /
+	@echo done
+
+uninstall:
+	rm $(PREFIX)$(EXEC_PATH)/$(EXEC)
+	rm $(PREFIX)$(LIB_PATH)/$(LIB)
+	-rmdir $(PREFIX)$(LIB_PATH)
+	rm $(PREFIX)$(DESKTOP_FILE_PATH)/$(DESKTOP)
+	for icon in $(ICONS); do rm -f $(PREFIX)$(ICON_PATH)/$$icon; done
+	-rmdir $(PREFIX)$(ICON_PATH)

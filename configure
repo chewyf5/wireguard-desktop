@@ -1,0 +1,61 @@
+#!/bin/bash
+
+default_prefix="/usr/local"
+
+dependencies="zenity wg-quick"
+
+for arg in "$@"; do
+    case "$arg" in
+    --prefix=*)
+        prefix=$(echo $arg | sed 's/--prefix=//')
+        ;;
+
+    --help)
+        echo 'usage: ./configure [options]'
+        echo 'options:'
+        echo '  --prefix=<path>: installation prefix'
+        echo 'all invalid options are silently ignored'
+        exit 0
+        ;;
+    esac
+done
+
+### Dependency Check ###
+echo "checking dependencies ..."
+for dep in $dependencies; do
+    echo -n "checking $dep ... "
+    if [ "$(which $dep)" = "" ]; then
+        echo "not installed"
+        exit 1
+    else
+        echo "installed"
+    fi
+done   
+
+### Prefix Check ###
+case $prefix in
+    "") 
+        echo "Prefix is empty. Is set to default ($default_prefix)"
+        prefix=$default_prefix
+        ;;
+    "/")
+        echo "[ Warning ] Prefix is set to / - This is not recommended"
+        ;;
+    *)
+        last_char=${prefix: -1}        
+        if [ "$last_char" == "/" ]; then
+            prefix=${prefix::-1}
+        fi
+esac
+echo "Prefix is $prefix"
+
+echo 'generating makefile ...'
+
+echo "PREFIX ?= $prefix" > Makefile
+echo "PATCH_PATH ?= $prefix" >> Makefile
+
+cat Makefile.in >> Makefile
+
+echo ""
+echo "configuration complete, type make to build."
+echo ""
